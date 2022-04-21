@@ -1,6 +1,4 @@
 import numpy as np
-from itertools import permutations
-import sys
 
 
 def path_print(path):
@@ -12,35 +10,46 @@ def path_print(path):
     return path_string
 
 
-def min_hamiltonian_path():
-    all_permutations = list(permutations(vertex_list))
-    min_hamiltonian_path_length = sys.maxsize
-    min_hamiltonian_path_permutation = ()
-    for permutation in all_permutations:
-        hamiltonian_path = distance_matrix.item((permutation[0], 0)) + distance_matrix.item(
-            (0, permutation[len(permutation) - 1]))
-        for i in range(len(permutation) - 1):
-            hamiltonian_path += distance_matrix.item((permutation[i + 1], permutation[i]))
-        if hamiltonian_path < min_hamiltonian_path_length:
-            min_hamiltonian_path_length = hamiltonian_path
-            min_hamiltonian_path_permutation = permutation
+def permutations(A):
+    c = []
+    for j in range(len(A)):
+        c.append(0)
+
+    min_hamiltonian_path_length = permutation_path(A)
+    min_hamiltonian_path_permutation = A
+
+    j = 0
+    while j < len(A):
+        if c[j] < j:
+            if (j % 2) == 0:
+                A[0], A[j] = A[j], A[0]
+            else:
+                A[c[j]], A[j] = A[j], A[c[j]]
+            if permutation_path(A) < min_hamiltonian_path_length:
+                min_hamiltonian_path_length = permutation_path(A)
+                min_hamiltonian_path_permutation = A
+            c[j] += 1
+            j = 0
+        else:
+            c[j] = 0
+            j += 1
     print("Tour: " + path_print(min_hamiltonian_path_permutation))
     print("Tour length: " + str(min_hamiltonian_path_length))
-    return min_hamiltonian_path_permutation
 
 
-# n = 4
-# for i in range(n):
-#     vertex_list.append(i)
-# vertex_list.remove(0)
-# distance_matrix = np.matrix('0 2 9 10; 1 0 6 4; 15 7 0 8; 6 3 12 0')
+def permutation_path(permutation):
+    hamiltonian_path = distance_matrix.item((permutation[0], 0)) + distance_matrix.item(
+        (0, permutation[len(permutation) - 1]))
+    for k in range(len(permutation) - 1):
+        hamiltonian_path += distance_matrix.item((permutation[k + 1], permutation[k]))
+    return hamiltonian_path
+
+
 distance_matrix = np.loadtxt('distance_matrix.csv', delimiter=',')
 n_rows, n_cols = distance_matrix.shape
-vertex_list = []
 if n_rows != n_cols:
     print("Matrix shape error (" + str(n_rows) + " rows, " + str(n_cols) + " columns)")
 else:
-    for i in range(n_rows):
-        vertex_list.append(i)
+    vertex_list = list(range(n_rows))
     vertex_list.remove(0)
-    min_hamiltonian_path()
+    permutations(vertex_list)
