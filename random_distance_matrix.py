@@ -24,3 +24,4 @@ for i in range(locations_number):
     vertex_list.append(i)
 vertex_list.remove(0)
 print(distance_matrix)
+np.savetxt('distance_matrix.csv', distance_matrix, delimiter=',')

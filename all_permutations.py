@@ -29,10 +29,18 @@ def min_hamiltonian_path():
     return min_hamiltonian_path_permutation
 
 
-n = 4
+# n = 4
+# for i in range(n):
+#     vertex_list.append(i)
+# vertex_list.remove(0)
+# distance_matrix = np.matrix('0 2 9 10; 1 0 6 4; 15 7 0 8; 6 3 12 0')
+distance_matrix = np.loadtxt('distance_matrix.csv', delimiter=',')
+n_rows, n_cols = distance_matrix.shape
 vertex_list = []
-for i in range(n):
-    vertex_list.append(i)
-vertex_list.remove(0)
-distance_matrix = np.matrix('0 2 9 10; 1 0 6 4; 15 7 0 8; 6 3 12 0')
-min_hamiltonian_path()
+if n_rows != n_cols:
+    print("Matrix shape error (" + str(n_rows) + " rows, " + str(n_cols) + " columns)")
+else:
+    for i in range(n_rows):
+        vertex_list.append(i)
+    vertex_list.remove(0)
+    min_hamiltonian_path()
