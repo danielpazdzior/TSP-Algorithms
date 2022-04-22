@@ -1,12 +1,13 @@
 import numpy as np
+import pandas as pd
 
 
 def path_print(path):
-    path_string = "0 -> "
+    path_string = str(vertex_names[0]) + " -> "
     for i in range(len(path)):
-        path_string += str(path[i])
+        path_string += str(vertex_names[path[i]])
         path_string += " -> "
-    path_string += "0"
+    path_string += str(vertex_names[0])
     return path_string
 
 
@@ -45,7 +46,9 @@ def permutation_path(permutation):
     return hamiltonian_path
 
 
-distance_matrix = np.loadtxt('distance_matrix.csv', delimiter=',')
+distance_matrix = pd.read_csv('distance_matrix.csv', delimiter=' ').to_numpy()
+vertex_names = distance_matrix[:, 0]
+distance_matrix = np.delete(distance_matrix, 0, 1)
 n_rows, n_cols = distance_matrix.shape
 if n_rows != n_cols:
     print("Matrix shape error (" + str(n_rows) + " rows, " + str(n_cols) + " columns)")
